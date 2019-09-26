@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.ReactNative.AppCompat.Light.NoActionBar.FullScreen">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:scaleType">fitXY</item>
+        <!--item name="android:windowIsTranslucent">true</item-->
+    </style>
+
+    <!-- add LaunchScreen style -->
+    <style name="LaunchScreen" parent="Theme.ReactNative.AppCompat.Light.NoActionBar.FullScreen">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+</resources>
