@@ -116,6 +116,12 @@ export default class ProductList extends Base {
   getProducts() {
     Product.getProducts({from: this.props.from}).then( list => {
       let products = [];
+      if(this.props.from == "record"){
+        products.push({
+          product_id:0,
+          product_name:"全部商品"
+        })
+      }
       list.map( product => {
         products.push(product.data);
       });
@@ -127,6 +133,12 @@ export default class ProductList extends Base {
       if (this.props.searchKeywords) {
         Product.searchProducts(this.props.searchKeywords, this.props.from).then( list => {
           let searchProducts = [];
+          if(this.props.from == "record"){
+            searchProducts.push({
+              product_id:0,
+              product_name:"全部商品"
+            })
+          }
           list.map( product => {
             searchProducts.push(product.data);
           });
@@ -158,7 +170,9 @@ export default class ProductList extends Base {
   // select product
   selectProduct(item) {
     //this.setState({selectedProduct: item.item, modalVisible:false});
-    item.item.pic = item.item.pic;
+    if(item.item.product_id != 0){
+      item.item.pic = item.item.pic;
+    }
     this.props._parent.setProduct(this.state.idx, item.item);
     this.navigator.pop();
   }
@@ -180,13 +194,22 @@ export default class ProductList extends Base {
    */
   renderItem(item, index) {
     let product = item.item;
-    let pic = product.pic;
-    return (
-      <TouchableOpacity activeOpacity={0.8} onPress={() => this.selectProduct(item)} style={styles.productItem}>
-        <Image source={{uri: pic}} style={styles.productImage} resizeMode='contain'/>
-        <View style={{justifyContent:'center', width: Screen.width-110}}>
-          <View><Text style={styles.productName}>{product.product_name}</Text></View>
-          {/*
+    if(product.product_id == 0){
+      return (
+          <TouchableOpacity activeOpacity={0.8} onPress={() => this.selectProduct(item)} style={[styles.productItem,{height:75}]}>
+            <View style={{justifyContent:'center', width: Screen.width-110}}>
+              <View><Text style={styles.productName}>{product.product_name}</Text></View>
+            </View>
+          </TouchableOpacity>
+      )
+    }else{
+      let pic = product.pic;
+      return (
+          <TouchableOpacity activeOpacity={0.8} onPress={() => this.selectProduct(item)} style={styles.productItem}>
+            <Image source={{uri: pic}} style={styles.productImage} resizeMode='contain'/>
+            <View style={{justifyContent:'center', width: Screen.width-110}}>
+              <View><Text style={styles.productName}>{product.product_name}</Text></View>
+              {/*
           <View style={{flexDirection:'row', marginTop:5}}>
             <View style={{width: 60}}>
               <Text style={styles.productVol}>{product.vol}</Text>
@@ -196,9 +219,11 @@ export default class ProductList extends Base {
             </View>
           </View>
           */}
-        </View>
-      </TouchableOpacity>
-    );
+            </View>
+          </TouchableOpacity>
+      )
+    }
+    ;
   }
 
   // product list end reached, load more products

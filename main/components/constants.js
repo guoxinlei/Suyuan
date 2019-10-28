@@ -177,7 +177,10 @@ const Constants = {
     saveUserPosition: api_host + 'origin/saveuserposition',
 
     // 检查用户登录设备（用于单点登录）
-    checkDeviceUser: api_host + 'origin/checkdeviceuser'
+    checkDeviceUser: api_host + 'origin/checkdeviceuser',
+
+    //出入库表单列表
+    getFormList: api_host + "origin/getformlist",
 
   }
 }

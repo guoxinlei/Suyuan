@@ -46,8 +46,8 @@
 		"preset": "react-native"
 	},
 	"react-native": {
-		"components": "./MyWorks/react-native/Suyuan/main/components/index",
-		"models": "./MyWorks/react-native/Suyuan/main/models/index",
-		"images": "./MyWorks/react-native/Suyuan/main/images/index"
+		"components": "./main/components/index",
+		"models": "./main/models/index",
+		"images": "./main/images/index"
 	}
 }

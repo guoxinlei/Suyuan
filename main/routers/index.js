@@ -61,6 +61,8 @@ import Servers from '../users/servers';
 import AddServer from '../users/servers-add';
 // 设置接收单位
 import SetReceiver from '../warehousing/set-receiver';
+//记录查询
+import Record from '../query/record'
 
 /**
  * Stack Navigator
@@ -279,8 +281,16 @@ const RootStack = createStackNavigator(
       navigationOptions: {
         gesturesEnabled: false
       }
-    }
-    
+    },
+    /**
+     * 记录查询
+     */
+    record: {
+      screen: mapNavigationStateParamsToProps(Record),
+      navigationOptions: {
+      gesturesEnabled: false
+  }
+},
   },
   {
     //initialRouteName: 'login',

@@ -70,6 +70,12 @@ export default class Organization extends Base {
 
     OrganizationModel.getOrganizations( options ).then( list => {
       let products = [];
+      if(this.props.from == "record"){
+        this.products.push({
+          id:0,
+          name:"全部"
+        })
+      }
       list.map( org => {
         this.products.push({id: org.data.org_id, name: org.data.name});
       });

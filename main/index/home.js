@@ -19,7 +19,8 @@ import {
   Config,
   Touchable,
   Siblings,
-  Permissions
+  Permissions,
+  ScrollView
 } from 'components';
 
 import Geolocation from '../components/geolocation';
@@ -462,9 +463,16 @@ export default class Home extends Base {
           sceneKey = 'warehousingIndex';
           params = {formtype: 3};
           break;
+        // case 7:
+        //   sceneKey = 'warehousingIndex';
+        //   params = {formtype: 4};
+        //   break;
         case 8:
           sceneKey = 'warehousingIndex';
           params = {formtype: 4};
+          break;
+        case 9:
+          sceneKey = 'record';
           break;
         default:
           return (<View key={"item"+k}></View>);
@@ -533,7 +541,7 @@ export default class Home extends Base {
     }
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {this.renderOnlineOffline()}
         <View>
           <Image style={{width: Screen.width, height: Screen.width*0.35}} source={{uri: Banner.image}} resizeMode="cover"/>
@@ -554,7 +562,7 @@ export default class Home extends Base {
           <Text style={styles.versionText}>当前版本：{Constants.app_version}</Text>
         </View>
         {this.renderUpdatingDatas()}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -562,8 +570,9 @@ export default class Home extends Base {
 const styles = StyleSheet.create({
   container: {
     backgroundColor:'#f5f5f5',
-    height: Screen.height-60,
-    width: Screen.width
+    // height: Screen.height-60,
+    // width: Screen.width
+    flex:1
   },
   box: {
     marginTop: 20,
@@ -571,7 +580,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     borderTopWidth:1,
     borderTopColor: '#eee',
-    height: Screen.height-260
+    height: Screen.height-150
   },
   item: {
     backgroundColor:'#fff',

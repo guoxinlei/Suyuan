@@ -561,9 +561,9 @@ export default class Box extends Base {
                   keyboardType='numeric'
                 />
               </View>
-              <Text style={styles.rowText}> 瓶</Text>
+              <Text style={styles.rowText}> 盒</Text>
               <View style={{alignItems:'flex-end', width: Screen.width-190}}>
-                <Text style={styles.rowText}>当前已扫<Text style={{color: '#ff0000'}}>{this.state.currentCode.length}</Text>瓶</Text>
+                <Text style={styles.rowText}>当前已扫<Text style={{color: '#ff0000'}}>{this.state.currentCode.length}</Text>盒</Text>
               </View>
             </View>
             <View style={[styles.row, {paddingVertical:8}]}>

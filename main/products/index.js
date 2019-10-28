@@ -34,8 +34,8 @@ export default class Product extends Base {
   }
 
   componentDidMount() {
+    global.EventEmitter.addListener("change-bar", this.switchSegment);
     if (this.props.selectedProduct) {
-      console.log(this.props.selectedProduct);
       // get product info
       if (this.props.selectedProduct.product_id) {
         ProductModel.getProductById(this.props.selectedProduct.product_id).then( product => {
@@ -56,7 +56,24 @@ export default class Product extends Base {
         });
       }
     }
+
   }
+
+  // remove listener
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    global.EventEmitter.removeListener("change-bar", this.switchSegment);
+  }
+
+  switchSegment=(data)=>{
+    if (data) {
+      this.setState({selectedProduct:data})
+    }else{
+      this.setState({selectedProduct: {}})
+    }
+  }
+
+
 
   /**
    * get product
@@ -163,7 +180,8 @@ export default class Product extends Base {
     // 没有商品id，有商品名称的数据（手工录入的商品）
     else if (selectedProduct && selectedProduct.product_name) {
       return (
-        <View style={styles.markBox}>
+        <View style={[styles.markBox,{
+          alignItems:selectedProduct.product_name == "全部商品"?"flex-start":"flex-end"}]}>
           <Text style={{fontSize:16, color: Constants.color.black4}}>{selectedProduct.product_name}</Text>
         </View>
       );
@@ -202,7 +220,9 @@ export default class Product extends Base {
     return (
       <TouchableOpacity onPress={() => {}} activeOpacity={1}>
         <View style={styles.row}>
-          <Text style={{fontSize: 16, color: '#555'}}>商品</Text>
+          <Text style={{fontSize: 16, color: '#555'}}>
+            {this.props.from == "record"? this.props.type :null}商品
+          </Text>
           <TouchableOpacity onPress={() => this.showList()} style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
             <Text style={{fontSize:16, color: Constants.color.blue}} numberOfLines={1}>请选择商品</Text>
             <Icons.Ionicons name="ios-arrow-forward-outline" size={24} color="#ccc" style={{marginLeft:8}}/>

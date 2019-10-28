@@ -35,6 +35,7 @@ import Product from '../products';
 import StackOfflineList from './stack-offline-list';
 // icons
 import { Associate as AssociateIcon } from 'images';
+import Colors from "../components/colors";
 
 export default class Stack extends Base {
   constructor(props) {
@@ -62,7 +63,9 @@ export default class Stack extends Base {
       addSubstractCode: null,
       addSubstractType: null,
       formDetails: formDetails || [],
-      hasFinished: false
+      hasFinished: false,
+      isShown:false,
+      errorData:[]
     });
 
     this.navItems = {
@@ -409,14 +412,18 @@ export default class Stack extends Base {
         ProductLot: this.props.data && this.props.data.productionbatch || this.props.productionBatch
       },
       success: (data) => {
-        console.log(data);
+        console.log("data======",data);
         //this.submits += Object.keys(this.codelist).length;
         if (!this.props.formtype)
           this.submits += 1;
 
         this.codelist = {};
-        this.setState({isLoading:false});
-        Tools.alert('关联完成', '关联成功：'+data.successcount+'箱，关联失败：'+data.failedcount+'箱');
+        this.setState({isLoading:false,errorData:data});
+
+        if(this.state.errorData.length !== 0){
+          this.setState({isShown:true})
+        }
+        // Tools.alert('关联完成', '关联成功：'+data.successcount+'箱，关联失败：'+data.failedcount+'箱');
 
         Config.setItem( this.stackCacheKey, {product: this.state.selectedProduct, currentCode: []});
         this.isPosting = false;
@@ -430,6 +437,20 @@ export default class Stack extends Base {
         this.isPosting = false;
       }
     });
+  }
+
+
+  showError(data){
+   let obj =data.failedcodes
+    let showView = []
+    for(let i in obj){
+      showView.push(
+          <View key={i}>
+            <Text style={{fontSize:14, color: '#000'}}>{obj[i]}</Text>
+          </View>
+      )
+    }
+    return showView;
   }
 
   /**
@@ -1228,10 +1249,37 @@ export default class Stack extends Base {
       modalHideModeStyle = {backgroundColor:'transparent', marginTop:1000};
 
     let marginTop = this.props.data && this.props.data.formno ? {marginTop:0}:null;
-
+    let errorData = this.state.errorData
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View>
+          <Modal
+              onRequestClose={() => {
+              }}
+              animationType={"fade"}
+              transparent={true}
+              visible={this.state.isShown}>
+            <View style={{width: Screen.width, height: Screen.height, alignItems: 'center', justifyContent:'center',backgroundColor: 'rgba(0,0,0,.3)'}}>
+              <View style={{width: Screen.width-100,height:200, borderRadius: 8, backgroundColor:'#fff',padding:16}}>
+                <Text style={{fontSize:14, color: Colors.blue}}>关联完成</Text>
+                <Text style={{fontSize:14, color: '#000'}}>关联成功：
+                  <Text style={{color:Colors.blue}}>{errorData.successcount} </Text>
+                  箱，关联失败：
+                  <Text style={{color:Colors.brightOrange}}>{errorData.failedcount} </Text>
+                  箱</Text>
+                <ScrollView style={{flex:1}}>
+                  {
+                    this.showError(errorData)
+                  }
+                </ScrollView>
+
+                <Touchable style={{alignItems:'flex-end',justifyContent:"flex-end",paddingTop:8}}
+                           onPress={()=>this.setState({isShown:false})}>
+                  <Text style={{fontSize:14, color: Colors.blue}}>确定</Text>
+                </Touchable>
+              </View>
+            </View>
+          </Modal>
           <ScrollView style={styles.container}>
             <View style={{marginTop:13}}>
               {this.renderWareNo()}
