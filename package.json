@@ -4,7 +4,9 @@
 	"private": true,
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
+		"test": "jest",
+		"bundle-ios": "./bundle.sh ios",
+		"bundle-android": "./bundle.sh android"
 	},
 	"dependencies": {
 		"axios": "^0.19.0",
@@ -46,8 +48,8 @@
 		"preset": "react-native"
 	},
 	"react-native": {
-		"components": "./main/components/index",
-		"models": "./main/models/index",
-		"images": "./main/images/index"
+		"components": "./rn/Suyuan/main/components/index",
+		"models": "./rn/Suyuan/main/models/index",
+		"images": "./rn/Suyuan/main/images/index"
 	}
 }

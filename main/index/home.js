@@ -131,9 +131,9 @@ export default class Home extends Base {
 
   onBarCodeRead(data) {
     if (!this.state.scanMode) {
-      // 检查上次扫描时间：两次扫描之间至少间隔300ms
+      // 检查上次扫描时间：两次扫描之间至少间隔1000ms
       let timeNow = new Date().getTime();
-      if (timeNow - this.lastScanTime < 300)
+      if (timeNow - this.lastScanTime < 1000)
         return;
 
       this.lastScanTime = timeNow;
