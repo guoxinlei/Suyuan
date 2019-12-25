@@ -127,11 +127,11 @@ class Update extends Base {
             <Text style={styles.progressText}>{progressText}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={() => this.stopDownload()}>
-          <View style={styles.buttonBox}>
-            <Text style={styles.buttonText}>取消</Text>
-          </View>
-        </TouchableOpacity>
+        {/*<TouchableOpacity onPress={() => this.stopDownload()}>*/}
+        {/*  <View style={styles.buttonBox}>*/}
+        {/*    <Text style={styles.buttonText}>取消</Text>*/}
+        {/*  </View>*/}
+        {/*</TouchableOpacity>*/}
       </View>
     );
   }

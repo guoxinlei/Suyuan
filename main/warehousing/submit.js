@@ -250,22 +250,22 @@ export default class WareHousingSubmit extends Base {
       return;
 
     // 离线模式，商品有多个，则需要选择商品
-    let details = this.state.formDetails;
-    if (User.offline && !this.state.submitMode && details && details.length > 0 && this.state.selectedProduct === null) {
-      Tools.alert('请选择当前扫码的商品');
-      return;
-    }
+    // let details = this.state.formDetails;
+    // if (User.offline && !this.state.submitMode && details && details.length > 0 && this.state.selectedProduct === null) {
+    //   Tools.alert('请选择当前扫码的商品');
+    //   return;
+    // }
 
     // 离线模式，需要输入对应的箱数
-    if (User.offline && !this.state.submitMode) {
-      if (this.state.codetype == 3 && !this.state.perStackBoxNumber) {
-        Tools.alert('请输入1垛的箱数');
-        return;
-      } else if (this.state.codetype == 1 && !this.state.perBoxBottleNumber) {
-        Tools.alert('请输入1箱的瓶数');
-        return;
-      }
-    }
+    // if (User.offline && !this.state.submitMode) {
+    //   if (this.state.codetype == 3 && !this.state.perStackBoxNumber) {
+    //     Tools.alert('请输入1垛的箱数');
+    //     return;
+    //   } else if (this.state.codetype == 1 && !this.state.perBoxBottleNumber) {
+    //     Tools.alert('请输入1箱的瓶数');
+    //     return;
+    //   }
+    // }
 
     let code = data.code.trim();
     code = Tools.getCode(code);
@@ -276,29 +276,29 @@ export default class WareHousingSubmit extends Base {
     }
 
     // stack or box
-    if (this.state.codetype == 3) {
-      if (!User.checkRule('box', code) && !User.checkRule('stack', code)) {
-        Tools.alert('剁码或箱码错误', '请重新扫描');
-        Vibration.vibrate();
-        return;
-      }
-    }
-    // box
-    else if (this.state.codetype == 2) {
-      if (!User.checkRule('box', code)) {
-        Tools.alert('箱码错误', '请重新扫描');
-        Vibration.vibrate();
-        return;
-      }
-    }
-    // bottle
-    else {
-      if (!User.checkRule('bottle', code)) {
-        Tools.alert('盒码错误', '请重新扫描');
-        Vibration.vibrate();
-        return;
-      }
-    }
+    // if (this.state.codetype == 3) {
+    //   if (!User.checkRule('box', code) && !User.checkRule('stack', code)) {
+    //     Tools.alert('剁码或箱码错误', '请重新扫描');
+    //     Vibration.vibrate();
+    //     return;
+    //   }
+    // }
+    // // box
+    // else if (this.state.codetype == 2) {
+    //   if (!User.checkRule('box', code)) {
+    //     Tools.alert('箱码错误', '请重新扫描');
+    //     Vibration.vibrate();
+    //     return;
+    //   }
+    // }
+    // // bottle
+    // else {
+    //   if (!User.checkRule('bottle', code)) {
+    //     Tools.alert('盒码错误', '请重新扫描');
+    //     Vibration.vibrate();
+    //     return;
+    //   }
+    // }
 
     this.setState({currentCode: code});
     this.isPosting = true;
@@ -431,6 +431,7 @@ export default class WareHousingSubmit extends Base {
    * submit online
    */
   submitOnline(code) {
+    console.log("code ====",code)
     console.log({
       test: '>>>>>>>>>>>>>>>',
       formno: this.state.formno,
@@ -441,10 +442,10 @@ export default class WareHousingSubmit extends Base {
 
     this.setState({isLoading:true});
     Tools.post({
-      url: this.state.codetype == 1 ? Constants.api.submitFormCase:Constants.api.submitForm,
+      url:  Constants.api.submitCase,
       data: {
         formno: this.state.formno,
-        codetype: this.state.codetype,
+        codetype: 0,
         code: code,
         isdelete: this.state.isDelete ? 1:0
       },
@@ -609,7 +610,7 @@ export default class WareHousingSubmit extends Base {
       url: this.props.formtype == 3 ? Constants.api.finishProductionForm:Constants.api.finishForm,
       data: postData,
       success: (data) => {
-        console.log(data);
+        console.log("data===",data);
         this.setState({isLoading:false,modalVisible3:false, modalVisible4:false});
         this.isPosting = false;
 
@@ -1203,7 +1204,7 @@ export default class WareHousingSubmit extends Base {
     }
     else {
       finishButton = (
-        <Button title={"完成" + this.formTypeName} onPress={() => this.finishForm(0)} style={{width:120}}/>
+        <Button title={"完成" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>
       );
     }
 
@@ -1275,6 +1276,8 @@ export default class WareHousingSubmit extends Base {
       default:
     }
 
+
+
     return (
       <View style={[styles.container, {marginTop: 20 - this.state.marginTop, borderTopWidth:1, borderTopColor: '#ddd'}]}>
         <ScrollView>
@@ -1286,20 +1289,20 @@ export default class WareHousingSubmit extends Base {
           <View>
             {productsView}
           </View>
-          <View style={[styles.segmentBox, {marginTop:0}]}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:3})} style={[styles.segmentItem2, this.state.codetype == 3 ? styles.segmentItemActive:null]}>
-              <Text style={[styles.segmentText, this.state.codetype == 3 ? styles.segmentTextActive:null]}>按垛</Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:2})} style={[styles.segmentItem2, this.state.codetype == 2 ? styles.segmentItemActive:null]}>
-              <Text style={[styles.segmentText, this.state.codetype == 2 ? styles.segmentTextActive:null]}>按箱</Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:1})} style={[styles.segmentItem2, this.state.codetype == 1 ? styles.segmentItemActive:null]}>
-              <Text style={[styles.segmentText, this.state.codetype == 1 ? styles.segmentTextActive:null]}>按盒</Text>
-            </TouchableOpacity>
-          </View>
+          {/*<View style={[styles.segmentBox, {marginTop:0}]}>*/}
+          {/*  /!*<TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:3})} style={[styles.segmentItem2, this.state.codetype == 3 ? styles.segmentItemActive:null]}>*!/*/}
+          {/*  /!*  <Text style={[styles.segmentText, this.state.codetype == 3 ? styles.segmentTextActive:null]}>按垛</Text>*!/*/}
+          {/*  /!*</TouchableOpacity>*!/*/}
+          {/*  <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:2})} style={[styles.segmentItem, this.state.codetype == 2 ? styles.segmentItemActive:null]}>*/}
+          {/*    <Text style={[styles.segmentText, this.state.codetype == 2 ? styles.segmentTextActive:null]}>按箱</Text>*/}
+          {/*  </TouchableOpacity>*/}
+          {/*  <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:1})} style={[styles.segmentItem, this.state.codetype == 1 ? styles.segmentItemActive:null]}>*/}
+          {/*    <Text style={[styles.segmentText, this.state.codetype == 1 ? styles.segmentTextActive:null]}>按盒</Text>*/}
+          {/*  </TouchableOpacity>*/}
+          {/*</View>*/}
           <View style={styles.row2}>
             <View style={[styles.row, {borderTopWidth:1, borderTopColor: '#ddd', borderBottomWidth:0}]}>
-              <Text style={[styles.rowText, {textAlign:'center', fontSize: this.state.codetype == 3 ? 12:14}]}>{codeString}</Text>
+              <Text style={[styles.rowText, {textAlign:'center', fontSize: this.state.codetype == 3 ? 12:14}]}>溯源码</Text>
               <QRCodeText style={[styles.textInput, {width:Screen.width-(this.state.codetype == 3 ? 158:150), marginLeft:10, marginRight:10}]} parent={this}>{Tools.parseCode(this.state.currentCode)}</QRCodeText>
               <Text style={[styles.rowText, {fontSize:14}]}>剔除 </Text>
               <View style={{transform: [{scale:0.8}]}}>
@@ -1316,27 +1319,27 @@ export default class WareHousingSubmit extends Base {
           {this.renderBoxNumbers()}
           {this.renderButtons()}
         </ScrollView>
-        {
-          this.state.modalVisible3 ?
-          <TouchableWithoutFeedback onPress={() => this.setState({modalVisible3:false})}>
-            <View style={styles.mask}>
+        {/*{*/}
+        {/*  this.state.modalVisible3 ?*/}
+        {/*  <TouchableWithoutFeedback onPress={() => this.setState({modalVisible3:false})}>*/}
+        {/*    <View style={styles.mask}>*/}
 
-              <View style={[styles.maskContent, {alignItems:'center', justifyContent:'center'}]}>
-                <Text style={[styles.maskText, {marginBottom:0}]}>完成箱数小于计划箱数，请选择</Text>
-                <View style={{marginVertical:10, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
-                  <Button title={"部分" + this.formTypeName} onPress={() => this.finishForm(1)} style={{width:120}}/>
-                  {/*
-                  <Button title={"全部" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>
-                  */}
-                </View>
-                <View>
-                  <Text style={{fontSize:12, color:'#aaa'}}>如果{this.formTypeName}未完成，请选择部分{this.formTypeName}，点击全部{this.formTypeName}将无法再增加或剔除</Text>
-                </View>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          : null
-        }
+        {/*      <View style={[styles.maskContent, {alignItems:'center', justifyContent:'center'}]}>*/}
+        {/*        <Text style={[styles.maskText, {marginBottom:0}]}>完成箱数小于计划箱数，请选择</Text>*/}
+        {/*        <View style={{marginVertical:10, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>*/}
+        {/*          <Button title={"部分" + this.formTypeName} onPress={() => this.finishForm(1)} style={{width:120}}/>*/}
+        {/*          /!**/}
+        {/*          <Button title={"全部" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>*/}
+        {/*          *!/*/}
+        {/*        </View>*/}
+        {/*        <View>*/}
+        {/*          <Text style={{fontSize:12, color:'#aaa'}}>如果{this.formTypeName}未完成，请选择部分{this.formTypeName}，点击全部{this.formTypeName}将无法再增加或剔除</Text>*/}
+        {/*        </View>*/}
+        {/*      </View>*/}
+        {/*    </View>*/}
+        {/*  </TouchableWithoutFeedback>*/}
+        {/*  : null*/}
+        {/*}*/}
         {this.renderModal4()}
       </View>
     )

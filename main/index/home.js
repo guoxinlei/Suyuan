@@ -275,7 +275,7 @@ export default class Home extends Base {
       "发现新版本",
       "是否现在升级？",
       [
-        {text: "取消", onPress: () => {} },
+        // {text: "取消", onPress: () => {} },
         {text: "立即升级", onPress: () => {
             // iOS: open App Store
             /*if (Constants.isIOS) {
@@ -288,7 +288,8 @@ export default class Home extends Base {
             this.navigator.push('update', {url: url});
           }
         }
-      ]
+      ],
+      { cancelable: false }
     );
     
   }
@@ -370,7 +371,7 @@ export default class Home extends Base {
           setTimeout( () => {
             Alert.alert(
               '下线通知', 
-              '您的账号已在其他设备上登录了，请重新登录',
+              data.FailDesc,
               [
                 {text: "确定", onPress: () => this.logout()}
               ]

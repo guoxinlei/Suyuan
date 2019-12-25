@@ -136,6 +136,5 @@ export default [
     username varchar(100),     -- 用户名
     password varchar(100)      -- 密码
   )`,
-  `insert into servers (id, name, url, is_default) values (1, '正式服务器', 'open.zhongjiuyun.com', 1)`,
-  `insert into servers (id, name, url, is_default) values (2, '测试服务器', 'test.open.zhongjiuyun.com', 0)`,
+  `insert into servers (id, name, url, is_default) values (1, '正式服务器', 'api.qkj.com.cn', 1)`,
 ];

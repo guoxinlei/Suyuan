@@ -131,6 +131,10 @@ const Constants = {
     // submit form (case)
     submitFormCase: api_host + 'origin/submitformcase',
 
+    //submit code
+    submitCase: api_host + 'origin/submitcode',
+
+
     // finish form
     finishForm: api_host + 'origin/finishform',
 
