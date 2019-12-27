@@ -367,7 +367,7 @@ export default class Home extends Base {
       success: (data) => {
         // 强制退出
         if (!data.IsValid) {
-          this.logout();
+          // this.logout();
           setTimeout( () => {
             Alert.alert(
               '下线通知', 
@@ -376,7 +376,7 @@ export default class Home extends Base {
                 {text: "确定", onPress: () => this.logout()}
               ]
             );
-          }, 500);
+          }, 20000);
         }
         this.isCheckingUserLoginStatus = false;
       },
