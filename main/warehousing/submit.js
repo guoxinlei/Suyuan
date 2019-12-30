@@ -35,18 +35,18 @@ import Moment from 'moment';
 const Radio = ({title, selected, parent, codetype}) => {
   if (codetype == 4) {
     return (
-      <TouchableOpacity onPress={() => parent.toggleDelete()} style={{flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:20}}>
-        <Icons.Ionicons name={selected ? 'ios-checkbox':'ios-square-outline'} size={20} style={{marginRight:5}} />
-        <Text>{title}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => parent.toggleDelete()} style={{flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:20}}>
+          <Icons.Ionicons name={selected ? 'ios-checkbox':'ios-square-outline'} size={20} style={{marginRight:5}} />
+          <Text>{title}</Text>
+        </TouchableOpacity>
     )
   }
 
   return (
-    <TouchableOpacity onPress={() => parent.setState({codetype})} style={{flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:20}}>
-      <Icons.Ionicons name={selected ? 'md-radio-button-on':'md-radio-button-off'} size={20} style={{marginRight:5}} />
-      <Text>{title}</Text>
-    </TouchableOpacity>
+      <TouchableOpacity onPress={() => parent.setState({codetype})} style={{flexDirection:'row', alignItems:'center', justifyContent:'center', marginRight:20}}>
+        <Icons.Ionicons name={selected ? 'md-radio-button-on':'md-radio-button-off'} size={20} style={{marginRight:5}} />
+        <Text>{title}</Text>
+      </TouchableOpacity>
   )
 }
 
@@ -164,7 +164,7 @@ export default class WareHousingSubmit extends Base {
 
   /**
    * keyboard event
-   * @param {*} event 
+   * @param {*} event
    */
   onKeyboardChange(event) {
     if (!event) {
@@ -184,7 +184,7 @@ export default class WareHousingSubmit extends Base {
 
       if (Platform.OS == 'android')
         this.setState({txtFocus: true});
-    } 
+    }
   }
 
   /**
@@ -250,22 +250,22 @@ export default class WareHousingSubmit extends Base {
       return;
 
     // 离线模式，商品有多个，则需要选择商品
-    // let details = this.state.formDetails;
-    // if (User.offline && !this.state.submitMode && details && details.length > 0 && this.state.selectedProduct === null) {
-    //   Tools.alert('请选择当前扫码的商品');
-    //   return;
-    // }
+    let details = this.state.formDetails;
+    if (User.offline && !this.state.submitMode && details && details.length > 0 && this.state.selectedProduct === null) {
+      Tools.alert('请选择当前扫码的商品');
+      return;
+    }
 
     // 离线模式，需要输入对应的箱数
-    // if (User.offline && !this.state.submitMode) {
-    //   if (this.state.codetype == 3 && !this.state.perStackBoxNumber) {
-    //     Tools.alert('请输入1垛的箱数');
-    //     return;
-    //   } else if (this.state.codetype == 1 && !this.state.perBoxBottleNumber) {
-    //     Tools.alert('请输入1箱的瓶数');
-    //     return;
-    //   }
-    // }
+    if (User.offline && !this.state.submitMode) {
+      if (this.state.codetype == 3 && !this.state.perStackBoxNumber) {
+        Tools.alert('请输入1垛的箱数');
+        return;
+      } else if (this.state.codetype == 1 && !this.state.perBoxBottleNumber) {
+        Tools.alert('请输入1箱的瓶数');
+        return;
+      }
+    }
 
     let code = data.code.trim();
     code = Tools.getCode(code);
@@ -276,29 +276,29 @@ export default class WareHousingSubmit extends Base {
     }
 
     // stack or box
-    // if (this.state.codetype == 3) {
-    //   if (!User.checkRule('box', code) && !User.checkRule('stack', code)) {
-    //     Tools.alert('剁码或箱码错误', '请重新扫描');
-    //     Vibration.vibrate();
-    //     return;
-    //   }
-    // }
-    // // box
-    // else if (this.state.codetype == 2) {
-    //   if (!User.checkRule('box', code)) {
-    //     Tools.alert('箱码错误', '请重新扫描');
-    //     Vibration.vibrate();
-    //     return;
-    //   }
-    // }
-    // // bottle
-    // else {
-    //   if (!User.checkRule('bottle', code)) {
-    //     Tools.alert('盒码错误', '请重新扫描');
-    //     Vibration.vibrate();
-    //     return;
-    //   }
-    // }
+    if (this.state.codetype == 3) {
+      if (!User.checkRule('box', code) && !User.checkRule('stack', code)) {
+        Tools.alert('剁码或箱码错误', '请重新扫描');
+        Vibration.vibrate();
+        return;
+      }
+    }
+    // box
+    else if (this.state.codetype == 2) {
+      if (!User.checkRule('box', code)) {
+        Tools.alert('箱码错误', '请重新扫描');
+        Vibration.vibrate();
+        return;
+      }
+    }
+    // bottle
+    else {
+      if (!User.checkRule('bottle', code)) {
+        Tools.alert('盒码错误', '请重新扫描');
+        Vibration.vibrate();
+        return;
+      }
+    }
 
     this.setState({currentCode: code});
     this.isPosting = true;
@@ -306,7 +306,7 @@ export default class WareHousingSubmit extends Base {
     // 离线模式
     if ( User.offline && !this.state.submitMode ) {
       this.submitOffline(code);
-    } 
+    }
     // 在线模式
     else {
       this.submitOnline(code);
@@ -336,13 +336,13 @@ export default class WareHousingSubmit extends Base {
 
   /**
    * 更新本次完成和累计完成数
-   * @param {float} number 
+   * @param {float} number
    */
   updateOfflineCount(number) {
     console.log('---------- update count');
     let formDetails = this.state.formDetails;
     let product = formDetails[this.state.selectedProduct];
-    
+
     // 扫码模式
     if (number) {
       if (this.state.isDelete) {
@@ -356,7 +356,7 @@ export default class WareHousingSubmit extends Base {
         product.count = 0;
       if (product.actualcount < 0)
         product.actualcount = 0;
-        
+
       this.setState({formDetails});
       return;
     }
@@ -431,7 +431,6 @@ export default class WareHousingSubmit extends Base {
    * submit online
    */
   submitOnline(code) {
-    console.log("code ====",code)
     console.log({
       test: '>>>>>>>>>>>>>>>',
       formno: this.state.formno,
@@ -442,10 +441,10 @@ export default class WareHousingSubmit extends Base {
 
     this.setState({isLoading:true});
     Tools.post({
-      url:  Constants.api.submitCase,
+      url: this.state.codetype == 1 ? Constants.api.submitFormCase:Constants.api.submitForm,
       data: {
         formno: this.state.formno,
-        codetype: 0,
+        codetype: this.state.codetype,
         code: code,
         isdelete: this.state.isDelete ? 1:0
       },
@@ -462,9 +461,9 @@ export default class WareHousingSubmit extends Base {
             let newCount = data.actualcount;
             if (detail.actualcount <= detail.plancount && newCount > detail.plancount) {
               Tools.alert(
-                '', 
-                '当前“' + detail.productname + '”的累计完成箱数已经大于计划箱数，请注意入库商品数量！', 
-                [ {text: '我知道了'} ]
+                  '',
+                  '当前“' + detail.productname + '”的累计完成箱数已经大于计划箱数，请注意入库商品数量！',
+                  [ {text: '我知道了'} ]
               );
             }
             detail.actualcount = newCount;
@@ -514,7 +513,7 @@ export default class WareHousingSubmit extends Base {
     }
 
     WarehousingCache.updateItem({
-      formNo, 
+      formNo,
       formType,
       productionLine: this.state.productionLine,
       productionBatch: this.state.productionBatch,
@@ -547,7 +546,7 @@ export default class WareHousingSubmit extends Base {
         Tools.alert('请选择生产线');
         return;
       }
-      
+
       if (!this.state.productionBatch) {
         Tools.alert('请填写生产批次');
         return;
@@ -610,7 +609,7 @@ export default class WareHousingSubmit extends Base {
       url: this.props.formtype == 3 ? Constants.api.finishProductionForm:Constants.api.finishForm,
       data: postData,
       success: (data) => {
-        console.log("data===",data);
+        console.log(data);
         this.setState({isLoading:false,modalVisible3:false, modalVisible4:false});
         this.isPosting = false;
 
@@ -623,9 +622,9 @@ export default class WareHousingSubmit extends Base {
             detail.count = 0;
           });
           this.setState({formDetails: details});
-          
+
           Tools.toast("部分入库成功");
-        } 
+        }
         // 完成入库，清除缓存列表
         else if (type != 1) {
           this.updateCache( 'finished' );
@@ -648,12 +647,12 @@ export default class WareHousingSubmit extends Base {
    */
   reCreateForm() {
     Alert.alert(
-      "操作成功，是否重建生产入库单？",
-      "",
-      [
-        {text: '不了'},
-        {text: '重建', onPress: () => this.doReCreateForm()}
-      ]
+        "操作成功，是否重建生产入库单？",
+        "",
+        [
+          {text: '不了'},
+          {text: '重建', onPress: () => this.doReCreateForm()}
+        ]
     );
   }
 
@@ -682,7 +681,7 @@ export default class WareHousingSubmit extends Base {
     let formInfo = {
       formtype: this.props.formtype
     };
-    
+
     this.isPosting = true;
     this.setState({isLoading:true});
     Tools.post({
@@ -691,8 +690,8 @@ export default class WareHousingSubmit extends Base {
       success: (data) => {
         console.log(data);
         this.navigator.replace('submitFormReplace', {
-          data, 
-          formtype: this.props.formtype, 
+          data,
+          formtype: this.props.formtype,
           productionLine: this.state.productionLine,
           productionBatch: this.state.productionBatch,
           _parent: this.props._parent
@@ -733,8 +732,8 @@ export default class WareHousingSubmit extends Base {
     if (!isProductValid) {
       Tools.alert('补充商品信息', '商品信息不完整，需要补充完整才能提交');
       this.navigator.push('addNewForm', {
-        warehousing, 
-        products, 
+        warehousing,
+        products,
         from: 'submit',
         _parent: this
       });
@@ -800,9 +799,9 @@ export default class WareHousingSubmit extends Base {
                 let newCount = item.ActualCount;
                 if (detail.actualcount <= detail.plancount && newCount > detail.plancount) {
                   Tools.alert(
-                    '', 
-                    '当前“' + detail.productname + '”的累计完成箱数已经大于计划箱数，请注意入库商品数量！', 
-                    [ {text: '我知道了'} ]
+                      '',
+                      '当前“' + detail.productname + '”的累计完成箱数已经大于计划箱数，请注意入库商品数量！',
+                      [ {text: '我知道了'} ]
                   );
                 }
                 detail.actualcount = newCount;
@@ -853,18 +852,18 @@ export default class WareHousingSubmit extends Base {
    */
   renderWareNO() {
     return (
-      <Touchable onPress={() => this.showMark()} style={[styles.row,{justifyContent:'space-between'}]}>
-        <View style={[styles.row, {padding:0, paddingVertical:0,margin:0,borderBottomWidth:0}]}>
-          <Text style={styles.rowText}>单号</Text>
-          <Text style={[styles.rowText, {marginLeft:30}]}>{this.state.formno}</Text>
-        </View>
-        { User.offline && !this.state.submitMode ? 
-          <View style={{height: 20, overflow:'hidden'}}>
-            <Icons.Ionicons name="ios-arrow-forward" size={24} color='#ddd' style={{marginTop:-2, marginLeft:5}}/>
+        <Touchable onPress={() => this.showMark()} style={[styles.row,{justifyContent:'space-between'}]}>
+          <View style={[styles.row, {padding:0, paddingVertical:0,margin:0,borderBottomWidth:0}]}>
+            <Text style={styles.rowText}>单号</Text>
+            <Text style={[styles.rowText, {marginLeft:30}]}>{this.state.formno}</Text>
           </View>
-          : null
-        }
-      </Touchable>
+          { User.offline && !this.state.submitMode ?
+              <View style={{height: 20, overflow:'hidden'}}>
+                <Icons.Ionicons name="ios-arrow-forward" size={24} color='#ddd' style={{marginTop:-2, marginLeft:5}}/>
+              </View>
+              : null
+          }
+        </Touchable>
     )
   }
 
@@ -889,50 +888,50 @@ export default class WareHousingSubmit extends Base {
     };
 
     let textInputContainerStyle = {
-      height: Constants.scaleRate > 1.5 ? 35:26, 
-      overflow:'hidden', 
-      borderRadius:8, 
+      height: Constants.scaleRate > 1.5 ? 35:26,
+      overflow:'hidden',
+      borderRadius:8,
       backgroundColor:'#f4f4f4',
       borderWidth:1,
       borderColor: '#ccc'
     }
 
     return (
-      <View>
-        <Touchable onPress={() => this.showProductionLines()} style={[styles.row, {justifyContent:'space-between'}]}>
-          <Text style={styles.rowText}>生产线</Text>
-          <View style={styles.rowRight}>
-            <Text style={styles.rowText2}>
-            { this.state.productionLine ? 
-              this.state.productionLine.name
-              : '请选择生产线'
-            }
-            </Text>
-            <View style={{height: 20, overflow:'hidden'}}>
-              <Icons.Ionicons name="ios-arrow-forward" size={24} color='#ddd' style={{marginTop:-2, marginLeft:5}}/>
+        <View>
+          <Touchable onPress={() => this.showProductionLines()} style={[styles.row, {justifyContent:'space-between'}]}>
+            <Text style={styles.rowText}>生产线</Text>
+            <View style={styles.rowRight}>
+              <Text style={styles.rowText2}>
+                { this.state.productionLine ?
+                    this.state.productionLine.name
+                    : '请选择生产线'
+                }
+              </Text>
+              <View style={{height: 20, overflow:'hidden'}}>
+                <Icons.Ionicons name="ios-arrow-forward" size={24} color='#ddd' style={{marginTop:-2, marginLeft:5}}/>
+              </View>
+            </View>
+          </Touchable>
+          <View style={[styles.row, {justifyContent:'space-between', paddingVertical:3*Constants.scaleRate}]}>
+            <Text style={styles.rowText}>生产批次</Text>
+            <View style={textInputContainerStyle}>
+              <TextInput
+                  ref={input => this.inputRef = input}
+                  style={textInputStyle}
+                  underlineColorAndroid="transparent"
+                  placeholder="请输入生产批次"
+                  placeholderTextColor="#aaa"
+                  value={this.state.productionBatch}
+                  onChangeText={(txt) => this.setState({ productionBatch: txt })}
+              />
             </View>
           </View>
-        </Touchable>
-        <View style={[styles.row, {justifyContent:'space-between', paddingVertical:3*Constants.scaleRate}]}>
-          <Text style={styles.rowText}>生产批次</Text>
-          <View style={textInputContainerStyle}>
-            <TextInput
-              ref={input => this.inputRef = input}
-              style={textInputStyle} 
-              underlineColorAndroid="transparent"
-              placeholder="请输入生产批次"
-              placeholderTextColor="#aaa"
-              value={this.state.productionBatch}
-              onChangeText={(txt) => this.setState({ productionBatch: txt })}
-            />
-          </View>
-        </View>
-        {/*
+          {/*
         <Touchable onPress={() => this.showDatePicker()} style={[styles.row, {justifyContent:'space-between'}]}>
           <Text style={styles.rowText}>生产时间</Text>
           <View style={styles.rowRight}>
             <Text style={styles.rowText2}>
-            { this.state.productionDate ? 
+            { this.state.productionDate ?
               Moment(this.state.productionDate).format("YYYY-MM-DD HH:mm")
               : '请选择生产时间'
             }
@@ -943,7 +942,7 @@ export default class WareHousingSubmit extends Base {
           </View>
         </Touchable>
         */}
-      </View>
+        </View>
     );
   }
 
@@ -1008,7 +1007,7 @@ export default class WareHousingSubmit extends Base {
 
   /**
    * set delete mode
-   * @param {boolean} status 
+   * @param {boolean} status
    */
   setDeleteMode(status) {
     if (!status) {
@@ -1084,35 +1083,35 @@ export default class WareHousingSubmit extends Base {
         actualCount = actualCount.toFixed(2);
 
       return (
-        <View style={styles.alertProductItem}>
-          <View style={[styles.row2, {backgroundColor:'#f4f5f6', padding:10, borderBottomWidth:2, borderBottomColor:'#fff'}]} key={"product:"+this.state.idx + ":" + k}>
-            <View style={styles.column1}>
-              <Text style={styles.rowText} numberOfLines={1}>{v.productname}</Text>
-            </View>
-            <View style={{flexDirection:'row', alignItems:'center', marginTop:10}}>
-              <Text style={{fontSize: 14, color: '#999', width: 60}}>计划箱数</Text>
-              <Text style={{fontSize: 14, color: '#999', width: 40}}>{v.plancount || 0}</Text>
-              <Text style={{fontSize: 14, color: colorCount, width: 60}}>本次完成</Text>
-              <Text style={{fontSize: 14, color: colorCount, width: 40}}>{count}</Text>
-              <Text style={{fontSize: 14, color: colorActualCount, width: 60}}>累计完成</Text>
-              <Text style={{fontSize: 14, color: colorActualCount, width: 40}}>{actualCount}</Text>
+          <View style={styles.alertProductItem}>
+            <View style={[styles.row2, {backgroundColor:'#f4f5f6', padding:10, borderBottomWidth:2, borderBottomColor:'#fff'}]} key={"product:"+this.state.idx + ":" + k}>
+              <View style={styles.column1}>
+                <Text style={styles.rowText} numberOfLines={1}>{v.productname}</Text>
+              </View>
+              <View style={{flexDirection:'row', alignItems:'center', marginTop:10}}>
+                <Text style={{fontSize: 14, color: '#999', width: 60}}>计划箱数</Text>
+                <Text style={{fontSize: 14, color: '#999', width: 40}}>{v.plancount || 0}</Text>
+                <Text style={{fontSize: 14, color: colorCount, width: 60}}>本次完成</Text>
+                <Text style={{fontSize: 14, color: colorCount, width: 40}}>{count}</Text>
+                <Text style={{fontSize: 14, color: colorActualCount, width: 60}}>累计完成</Text>
+                <Text style={{fontSize: 14, color: colorActualCount, width: 40}}>{actualCount}</Text>
+              </View>
             </View>
           </View>
-        </View>
       );
     } )
 
     return (
-      <View style={styles.mask}>
-        <View style={[styles.maskContent, {alignItems:'center', justifyContent:'center', paddingTop:0, paddingBottom:0}]}>
-          <Text style={[styles.maskText, {marginBottom:0, paddingVertical:10}]}>{this.formTypeName}详情</Text>
+        <View style={styles.mask}>
+          <View style={[styles.maskContent, {alignItems:'center', justifyContent:'center', paddingTop:0, paddingBottom:0}]}>
+            <Text style={[styles.maskText, {marginBottom:0, paddingVertical:10}]}>{this.formTypeName}详情</Text>
             {views}
-          <View style={{marginVertical:10, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
-            <Button title='返回编辑' onPress={() => this.setState({modalVisible4:false})} style={{width:120, backgroundColor:'#fff'}} fontStyle={{color: Constants.color.blue}}/>
-            <Button title={"确认" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>
+            <View style={{marginVertical:10, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
+              <Button title='返回编辑' onPress={() => this.setState({modalVisible4:false})} style={{width:120, backgroundColor:'#fff'}} fontStyle={{color: Constants.color.blue}}/>
+              <Button title={"确认" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>
+            </View>
           </View>
         </View>
-      </View>
     );
   }
 
@@ -1125,50 +1124,50 @@ export default class WareHousingSubmit extends Base {
     if (this.state.codetype == 3) {
       number = this.state.perStackBoxNumber + '';
       return (
-        <View style={styles.row2}>
-          <View style={[styles.row]}>
-            <Text style={styles.rowText}>1垛 =</Text>
-            <TextInput
-              ref="textInput"
-              style={[styles.textInput, {marginLeft:10, width: Screen.width-150}]}
-              underlineColorAndroid='transparent'
-              placeholder="请输入箱数"
-              onChangeText={(text) => this.setBoxNumber(text, 'stack')}
-              value={number}
-              keyboardType='numeric'
-              onFocus={() => this.onTextFocus()}
-              onBlur={() => this.onTextBlur()}
-            />
-            <Text style={styles.rowText}> 箱</Text>
+          <View style={styles.row2}>
+            <View style={[styles.row]}>
+              <Text style={styles.rowText}>1垛 =</Text>
+              <TextInput
+                  ref="textInput"
+                  style={[styles.textInput, {marginLeft:10, width: Screen.width-150}]}
+                  underlineColorAndroid='transparent'
+                  placeholder="请输入箱数"
+                  onChangeText={(text) => this.setBoxNumber(text, 'stack')}
+                  value={number}
+                  keyboardType='numeric'
+                  onFocus={() => this.onTextFocus()}
+                  onBlur={() => this.onTextBlur()}
+              />
+              <Text style={styles.rowText}> 箱</Text>
+            </View>
           </View>
-        </View>
       );
-    // 按盒
+      // 按盒
     } else if (this.state.codetype == 1) {
       number = this.state.perBoxBottleNumber;
 
       return (
-        <View style={styles.row2}>
-          <View style={[styles.row]}>
-            <Text style={styles.rowText}>1箱 =</Text>
-            <TextInput
-              ref="textInput"
-              style={[styles.textInput, {marginLeft:10, width: Screen.width-150}]}
-              underlineColorAndroid='transparent'
-              placeholder="请输入瓶数"
-              onChangeText={(text) => this.setBoxNumber(text, 'bottle')}
-              value={number}
-              keyboardType='numeric'
-              onFocus={() => this.onTextFocus()}
-              onBlur={() => this.onTextBlur()}
-            />
-            <Text style={styles.rowText}> 瓶</Text>
+          <View style={styles.row2}>
+            <View style={[styles.row]}>
+              <Text style={styles.rowText}>1箱 =</Text>
+              <TextInput
+                  ref="textInput"
+                  style={[styles.textInput, {marginLeft:10, width: Screen.width-150}]}
+                  underlineColorAndroid='transparent'
+                  placeholder="请输入瓶数"
+                  onChangeText={(text) => this.setBoxNumber(text, 'bottle')}
+                  value={number}
+                  keyboardType='numeric'
+                  onFocus={() => this.onTextFocus()}
+                  onBlur={() => this.onTextBlur()}
+              />
+              <Text style={styles.rowText}> 瓶</Text>
+            </View>
           </View>
-        </View>
       );
     }
 
-    
+
   }
 
   renderCheckBox(item, index) {
@@ -1183,9 +1182,9 @@ export default class WareHousingSubmit extends Base {
       return (<View style={styles.checkBox}></View>);
     }
     return (
-      <View style={[styles.checkBox, {borderColor: 'blue'}]}>
-        <Icons.Ionicons name="ios-checkmark-outline" size={20} color='blue'/>
-      </View>
+        <View style={[styles.checkBox, {borderColor: 'blue'}]}>
+          <Icons.Ionicons name="ios-checkmark-outline" size={20} color='blue'/>
+        </View>
     );
   }
 
@@ -1193,26 +1192,26 @@ export default class WareHousingSubmit extends Base {
     let finishButton;
     if ( User.offline && !this.state.submitMode ) {
       finishButton = (
-        <Button title={"提交"} onPress={() => this.submitData()} style={{width:120}}/>
+          <Button title={"提交"} onPress={() => this.submitData()} style={{width:120}}/>
       );
     }
-    // 出库类型并且表单状态是2（已完成），按钮不可点击 
+    // 出库类型并且表单状态是2（已完成），按钮不可点击
     else if (this.props.formtype == 2 && this.props.formstate == 2) {
       finishButton = (
-        <Button title={"完成" + this.formTypeName} onPress={() => { Tools.toast('该出库单已完成') } } style={{width:120, backgroundColor: '#ccc'}}/>
+          <Button title={"完成" + this.formTypeName} onPress={() => { Tools.toast('该出库单已完成') } } style={{width:120, backgroundColor: '#ccc'}}/>
       );
     }
     else {
       finishButton = (
-        <Button title={"完成" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>
+          <Button title={"完成" + this.formTypeName} onPress={() => this.finishForm(0)} style={{width:120}}/>
       );
     }
 
     return (
-      <View style={{marginTop:20, marginBottom: 30, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
-        {finishButton}
-        <Button title="返回" onPress={() => this.navigator.pop()} style={{width:120, backgroundColor:'#fff'}} fontStyle={{color: Constants.color.blue}}/>
-      </View>
+        <View style={{marginTop:20, marginBottom: 30, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
+          {finishButton}
+          <Button title="返回" onPress={() => this.navigator.pop()} style={{width:120, backgroundColor:'#fff'}} fontStyle={{color: Constants.color.blue}}/>
+        </View>
     );
   }
 
@@ -1236,29 +1235,29 @@ export default class WareHousingSubmit extends Base {
       if (v.actualcount > v.plancount)
         colorActualCount = 'red';
 
-        let count = v.count || 0;
-        if (count)
-          count = count.toFixed(2);
-  
-        let actualCount = v.actualcount || 0;
-        if (actualCount)
-          actualCount = actualCount.toFixed(2);
-  
+      let count = v.count || 0;
+      if (count)
+        count = count.toFixed(2);
+
+      let actualCount = v.actualcount || 0;
+      if (actualCount)
+        actualCount = actualCount.toFixed(2);
+
       return (
-        <Touchable onPress={() => this.selectProduct(v, k)} style={[styles.row2, {backgroundColor:'#f4f5f6', padding:10, borderBottomWidth:2, borderBottomColor:'#fff'}]} key={"product:"+this.state.idx + ":" + k}>
-          <View style={[styles.column1, {flexDirection:'row', alignItems:'center'}]}>
-            {this.renderCheckBox(v, k)}
-            <Text style={styles.rowText} numberOfLines={1}>{v.productname}</Text>
-          </View>
-          <View style={{flexDirection:'row', alignItems:'center', marginTop:10}}>
-            <Text style={{fontSize: 14, color: '#999', width: 60}}>计划箱数</Text>
-            <Text style={{fontSize: 14, color: '#999', width: 40}}>{v.plancount || 0}</Text>
-            <Text style={{fontSize: 14, color: colorCount, width: 60}}>本次完成</Text>
-            <Text style={{fontSize: 14, color: colorCount, width: 40}}>{count}</Text>
-            <Text style={{fontSize: 14, color: colorActualCount, width: 60}}>累计完成</Text>
-            <Text style={{fontSize: 14, color: colorActualCount, width: 40}}>{actualCount}</Text>
-          </View>
-        </Touchable>
+          <Touchable onPress={() => this.selectProduct(v, k)} style={[styles.row2, {backgroundColor:'#f4f5f6', padding:10, borderBottomWidth:2, borderBottomColor:'#fff'}]} key={"product:"+this.state.idx + ":" + k}>
+            <View style={[styles.column1, {flexDirection:'row', alignItems:'center'}]}>
+              {this.renderCheckBox(v, k)}
+              <Text style={styles.rowText} numberOfLines={1}>{v.productname}</Text>
+            </View>
+            <View style={{flexDirection:'row', alignItems:'center', marginTop:10}}>
+              <Text style={{fontSize: 14, color: '#999', width: 60}}>计划箱数</Text>
+              <Text style={{fontSize: 14, color: '#999', width: 40}}>{v.plancount || 0}</Text>
+              <Text style={{fontSize: 14, color: colorCount, width: 60}}>本次完成</Text>
+              <Text style={{fontSize: 14, color: colorCount, width: 40}}>{count}</Text>
+              <Text style={{fontSize: 14, color: colorActualCount, width: 60}}>累计完成</Text>
+              <Text style={{fontSize: 14, color: colorActualCount, width: 40}}>{actualCount}</Text>
+            </View>
+          </Touchable>
       )
     });
 
@@ -1276,72 +1275,70 @@ export default class WareHousingSubmit extends Base {
       default:
     }
 
-
-
     return (
-      <View style={[styles.container, {marginTop: 20 - this.state.marginTop, borderTopWidth:1, borderTopColor: '#ddd'}]}>
-        <ScrollView>
+        <View style={[styles.container, {marginTop: 20 - this.state.marginTop, borderTopWidth:1, borderTopColor: '#ddd'}]}>
+          <ScrollView>
 
-          {this.renderWareNO()}
+            {this.renderWareNO()}
 
-          {this.renderProductionInfo()}
+            {this.renderProductionInfo()}
 
-          <View>
-            {productsView}
-          </View>
-          {/*<View style={[styles.segmentBox, {marginTop:0}]}>*/}
-          {/*  /!*<TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:3})} style={[styles.segmentItem2, this.state.codetype == 3 ? styles.segmentItemActive:null]}>*!/*/}
-          {/*  /!*  <Text style={[styles.segmentText, this.state.codetype == 3 ? styles.segmentTextActive:null]}>按垛</Text>*!/*/}
-          {/*  /!*</TouchableOpacity>*!/*/}
-          {/*  <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:2})} style={[styles.segmentItem, this.state.codetype == 2 ? styles.segmentItemActive:null]}>*/}
-          {/*    <Text style={[styles.segmentText, this.state.codetype == 2 ? styles.segmentTextActive:null]}>按箱</Text>*/}
-          {/*  </TouchableOpacity>*/}
-          {/*  <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:1})} style={[styles.segmentItem, this.state.codetype == 1 ? styles.segmentItemActive:null]}>*/}
-          {/*    <Text style={[styles.segmentText, this.state.codetype == 1 ? styles.segmentTextActive:null]}>按盒</Text>*/}
-          {/*  </TouchableOpacity>*/}
-          {/*</View>*/}
-          <View style={styles.row2}>
-            <View style={[styles.row, {borderTopWidth:1, borderTopColor: '#ddd', borderBottomWidth:0}]}>
-              <Text style={[styles.rowText, {textAlign:'center', fontSize: this.state.codetype == 3 ? 12:14}]}>溯源码</Text>
-              <QRCodeText style={[styles.textInput, {width:Screen.width-(this.state.codetype == 3 ? 158:150), marginLeft:10, marginRight:10}]} parent={this}>{Tools.parseCode(this.state.currentCode)}</QRCodeText>
-              <Text style={[styles.rowText, {fontSize:14}]}>剔除 </Text>
-              <View style={{transform: [{scale:0.8}]}}>
-                <Switch
-                  onTintColor={Constants.color.blue}
-                  onValueChange={(value) => this.setDeleteMode(value)}
-                  thumbTintColor={Platform.OS == 'android' ? '#fff':null}
-                  tintColor="#ccc"
-                  value={this.state.isDelete}/>
-              </View>
+            <View>
+              {productsView}
             </View>
-            <View style={{alignItems:'flex-start', paddingHorizontal:10, marginBottom:10}}><Text style={{fontSize:12, color:'#666'}}>开启剔除开关，扫码可以取消该箱/垛的{this.formTypeName}，如果整垛50箱需{this.formTypeName}48箱，可以按照整垛{this.formTypeName}后，剔除2箱{this.formTypeName}以便简化操作。</Text></View>
-          </View>
-          {this.renderBoxNumbers()}
-          {this.renderButtons()}
-        </ScrollView>
-        {/*{*/}
-        {/*  this.state.modalVisible3 ?*/}
-        {/*  <TouchableWithoutFeedback onPress={() => this.setState({modalVisible3:false})}>*/}
-        {/*    <View style={styles.mask}>*/}
+            <View style={[styles.segmentBox, {marginTop:0}]}>
+              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:3})} style={[styles.segmentItem2, this.state.codetype == 3 ? styles.segmentItemActive:null]}>
+                <Text style={[styles.segmentText, this.state.codetype == 3 ? styles.segmentTextActive:null]}>按垛</Text>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:2})} style={[styles.segmentItem2, this.state.codetype == 2 ? styles.segmentItemActive:null]}>
+                <Text style={[styles.segmentText, this.state.codetype == 2 ? styles.segmentTextActive:null]}>按箱</Text>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:1})} style={[styles.segmentItem2, this.state.codetype == 1 ? styles.segmentItemActive:null]}>
+                <Text style={[styles.segmentText, this.state.codetype == 1 ? styles.segmentTextActive:null]}>按盒</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.row2}>
+              <View style={[styles.row, {borderTopWidth:1, borderTopColor: '#ddd', borderBottomWidth:0}]}>
+                <Text style={[styles.rowText, {textAlign:'center', fontSize: this.state.codetype == 3 ? 12:14}]}>{codeString}</Text>
+                <QRCodeText style={[styles.textInput, {width:Screen.width-(this.state.codetype == 3 ? 158:150), marginLeft:10, marginRight:10}]} parent={this}>{Tools.parseCode(this.state.currentCode)}</QRCodeText>
+                <Text style={[styles.rowText, {fontSize:14}]}>剔除 </Text>
+                <View style={{transform: [{scale:0.8}]}}>
+                  <Switch
+                      onTintColor={Constants.color.blue}
+                      onValueChange={(value) => this.setDeleteMode(value)}
+                      thumbTintColor={Platform.OS == 'android' ? '#fff':null}
+                      tintColor="#ccc"
+                      value={this.state.isDelete}/>
+                </View>
+              </View>
+              <View style={{alignItems:'flex-start', paddingHorizontal:10, marginBottom:10}}><Text style={{fontSize:12, color:'#666'}}>开启剔除开关，扫码可以取消该箱/垛的{this.formTypeName}，如果整垛50箱需{this.formTypeName}48箱，可以按照整垛{this.formTypeName}后，剔除2箱{this.formTypeName}以便简化操作。</Text></View>
+            </View>
+            {this.renderBoxNumbers()}
+            {this.renderButtons()}
+          </ScrollView>
+          {
+            this.state.modalVisible3 ?
+                <TouchableWithoutFeedback onPress={() => this.setState({modalVisible3:false})}>
+                  <View style={styles.mask}>
 
-        {/*      <View style={[styles.maskContent, {alignItems:'center', justifyContent:'center'}]}>*/}
-        {/*        <Text style={[styles.maskText, {marginBottom:0}]}>完成箱数小于计划箱数，请选择</Text>*/}
-        {/*        <View style={{marginVertical:10, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>*/}
-        {/*          <Button title={"部分" + this.formTypeName} onPress={() => this.finishForm(1)} style={{width:120}}/>*/}
-        {/*          /!**/}
-        {/*          <Button title={"全部" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>*/}
-        {/*          *!/*/}
-        {/*        </View>*/}
-        {/*        <View>*/}
-        {/*          <Text style={{fontSize:12, color:'#aaa'}}>如果{this.formTypeName}未完成，请选择部分{this.formTypeName}，点击全部{this.formTypeName}将无法再增加或剔除</Text>*/}
-        {/*        </View>*/}
-        {/*      </View>*/}
-        {/*    </View>*/}
-        {/*  </TouchableWithoutFeedback>*/}
-        {/*  : null*/}
-        {/*}*/}
-        {this.renderModal4()}
-      </View>
+                    <View style={[styles.maskContent, {alignItems:'center', justifyContent:'center'}]}>
+                      <Text style={[styles.maskText, {marginBottom:0}]}>完成箱数小于计划箱数，请选择</Text>
+                      <View style={{marginVertical:10, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
+                        <Button title={"部分" + this.formTypeName} onPress={() => this.finishForm(1)} style={{width:120}}/>
+                        {/*
+                  <Button title={"全部" + this.formTypeName} onPress={() => this.finishForm(2)} style={{width:120}}/>
+                  */}
+                      </View>
+                      <View>
+                        <Text style={{fontSize:12, color:'#aaa'}}>如果{this.formTypeName}未完成，请选择部分{this.formTypeName}，点击全部{this.formTypeName}将无法再增加或剔除</Text>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableWithoutFeedback>
+                : null
+          }
+          {this.renderModal4()}
+        </View>
     )
   }
 }
