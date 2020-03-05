@@ -145,14 +145,24 @@ public class ToolsModule extends ReactContextBaseJavaModule {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(_context, "com.zhongjiu.suyuan.fileProvider", apkfile);
+//            Uri contentUri = FileProvider.getUriForFile(_context, "com.zhongjiu.suyuan.fileProvider", apkfile);
+//
+//            Intent i = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+//            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            i.setDataAndType(contentUri, "application/vnd.android.package-archive");
+//            _context.startActivity(i);
 
-            Intent i = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setDataAndType(contentUri, "application/vnd.android.package-archive");
-            _context.startActivity(i);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            Uri contentUri = FileProvider.getUriForFile(_context, "com.zhongjiu.suyuan.fileProvider", apkfile);
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+            _context.startActivity(intent);
+
         } else {
+
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.setDataAndType(Uri.fromFile(apkfile), "application/vnd.android.package-archive");

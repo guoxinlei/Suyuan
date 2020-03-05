@@ -25,7 +25,8 @@ import {
   QRCodeText,
   styles,
   Touchable,
-  Colors
+  Colors,
+  AsyncStorage
 } from 'components';
 
 // model
@@ -112,6 +113,7 @@ export default class Servers extends Base {
           this.props._parent.setDefaultServer(server);
         });
       }
+      AsyncStorage.removeItem("servers")
       setTimeout( () => {
         this.reload();
       }, 300);
@@ -150,7 +152,7 @@ export default class Servers extends Base {
             <Icons.Ionicons name="md-radio-button-on" size={26} color={server.data.is_default ? Colors.blue:"#fff"}/>
             <Text style={{fontSize:15, color: Colors.black, marginLeft:10}}>{server.data.name}</Text>
           </View>
-          { server.data.id > 2 ?
+          { server.data.id > 1 ?
             <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center', paddingRight:10}}>
               <Touchable onPress={() => this.edit(server)}>
                 <Icons.Ionicons name="ios-create-outline" size={26} color={Colors.grey}/>

@@ -115,7 +115,7 @@ export default class WareHousingSubmit extends Base {
     }
 
     // 读取缓存数据
-    if (this.props.cacheItem) {
+    if (this.props.formtype == 3&&this.props.cacheItem) {
       let cacheData = this.props.cacheItem.data;
       if (cacheData.production_batch)
         this.setState({productionBatch: cacheData.production_batch});
@@ -589,8 +589,8 @@ export default class WareHousingSubmit extends Base {
     // 部分入库（生产入库的部分入库需要提交，其他情况直接关闭页面）
     if (type == 1 && this.props.formtype != 3) {
       this.setState({modalVisible3:false, modalVisible4:false});
-      this.navigator.pop();
-      return;
+      // this.navigator.pop();
+      // return;
     }
     this.setState({isLoading:true});
     this.isPosting = true;
@@ -1287,13 +1287,16 @@ export default class WareHousingSubmit extends Base {
               {productsView}
             </View>
             <View style={[styles.segmentBox, {marginTop:0}]}>
-              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:3})} style={[styles.segmentItem2, this.state.codetype == 3 ? styles.segmentItemActive:null]}>
-                <Text style={[styles.segmentText, this.state.codetype == 3 ? styles.segmentTextActive:null]}>按垛</Text>
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:2})} style={[styles.segmentItem2, this.state.codetype == 2 ? styles.segmentItemActive:null]}>
+              {
+                this.props.formtype == 4? null :
+                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:3})} style={[styles.segmentItem2, this.state.codetype == 3 ? styles.segmentItemActive:null]}>
+                      <Text style={[styles.segmentText, this.state.codetype == 3 ? styles.segmentTextActive:null]}>按垛</Text>
+                    </TouchableOpacity>
+              }
+              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:2})} style={[this.props.formtype == 4?styles.segmentItem:styles.segmentItem2, this.state.codetype == 2 ? styles.segmentItemActive:null]}>
                 <Text style={[styles.segmentText, this.state.codetype == 2 ? styles.segmentTextActive:null]}>按箱</Text>
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:1})} style={[styles.segmentItem2, this.state.codetype == 1 ? styles.segmentItemActive:null]}>
+              <TouchableOpacity activeOpacity={0.8} onPress={() => this.setState({codetype:1})} style={[this.props.formtype == 4?styles.segmentItem:styles.segmentItem2, this.state.codetype == 1 ? styles.segmentItemActive:null]}>
                 <Text style={[styles.segmentText, this.state.codetype == 1 ? styles.segmentTextActive:null]}>按盒</Text>
               </TouchableOpacity>
             </View>

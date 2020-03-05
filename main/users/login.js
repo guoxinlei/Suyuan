@@ -22,13 +22,15 @@ import {
   Screen,
   Icons,
   Colors,
-  Touchable
+  Touchable,
+  AsyncStorage
 } from 'components';
 
 // user
 import {User, Server, LoginHistory} from 'models';
 
 import {LoginBackground, Logo, User as UserIcon, Password} from 'images';
+import {getDeviceCountry} from "react-native-device-info";
 
 export default class Login extends Base {
   constructor(props) {
@@ -59,6 +61,23 @@ export default class Login extends Base {
       ];
     }
 
+    AsyncStorage.getItem("servers").then((value) => {
+       if(value){
+         const jsonValue = JSON.parse(value);
+         let name = jsonValue.name
+         let url = jsonValue.url
+         Server.getServers().then( servers => {
+           if(servers.length == 1){
+             Server.add({name, url});
+           }
+         })
+         // if(value.is_default){
+         //   jsonValue.setDefault();
+         //   this.setDefaultServer(jsonValue);
+         // }
+       }
+    });
+
     Server.getDefault().then( server => {
       global.defaultServer = server;
 
@@ -66,9 +85,7 @@ export default class Login extends Base {
     }).catch( error => {
       Tools.alert("获取服务器信息失败");
     });
-
     this.getHistory();
-
   }
 
   getHistory() {
@@ -125,8 +142,6 @@ export default class Login extends Base {
 
   // handle login response
   handleResponse(response) {
-
-    console.log(response);
 
     // transform coderules to object
     let coderules = response.coderules;

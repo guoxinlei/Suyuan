@@ -24,7 +24,8 @@ import {
   Config,
   QRCodeText,
   styles,
-  Touchable
+  Touchable,
+  AsyncStorage
 } from 'components';
 
 // model
@@ -93,6 +94,7 @@ export default class AddServer extends Base {
 
     task.then( server => {
       global.EventEmitter.emit("server-added");
+      AsyncStorage.setItem('servers', JSON.stringify(server.data))
       Tools.alert( (this.props.server ? '编辑':"新增") + "服务器成功");
       this.navigator.pop();
     }).catch(error => {
